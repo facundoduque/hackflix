@@ -9,7 +9,7 @@ export const HeroSection = () => {
         backgroundImage: `url(/imagen_horizontal_hero.jpg)`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "100dv",
+        height: "100dvh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
