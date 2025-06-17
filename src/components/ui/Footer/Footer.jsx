@@ -8,15 +8,15 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-section logo-section">
           <img src="/logo.png" alt="Logo" className="logo" />
-          <h2>StreamFlix</h2>
-          <p>&copy; {new Date().getFullYear()} StreamFlix. Todos los derechos reservados.</p>
+          <h2>HackFlix</h2>
+          <p>&copy; {new Date().getFullYear()} HackFlix. Todos los derechos reservados.</p>
         </div>
 
         <div className="footer-section contact-section">
           <h3>Contacto</h3>
           <p>Dirección: Av. Siempre Viva 123</p>
           <p>Teléfono: +598 1234 5678</p>
-          <p>Email: contacto@streamflix.com</p>
+          <p>Email: contacto@hackflix.com</p>
         </div>
 
         <div className="footer-section links-section">
