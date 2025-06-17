@@ -10,7 +10,9 @@ function App() {
   return (
     <>
       <Navbar />
+      
       <Footer />
+    
       <HeroSection></HeroSection>
     </>
   );

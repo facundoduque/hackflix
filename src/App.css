@@ -1,4 +1,25 @@
-* {
-  padding: 0;
+html, body, #root {
+  height: 100%;
   margin: 0;
+  padding: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #181818;
+  color: #ccc;
+}
+
+.app-header {
+  background-color: #222;
+  color: #fff;
+  padding: 40px;
+  text-align: center;
+}
+
+.app-main {
+  flex: 1;
+  padding: 20px;
 }
