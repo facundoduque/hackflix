@@ -10,20 +10,9 @@ function App() {
   return (
     <>
       <Navbar />
-      
-       <div className="app">
-      <header className="app-header">
-        <h1>Bienvenido a StreamFlix</h1>
-        <p>Tu plataforma de streaming favorita</p>
-      </header>
-
-      <main className="app-main">
-        <p>Contenido de ejemplo...</p>
-        <div style={{ height: '300px' }}></div>
-      </main>
 
       <Footer />
-    </div>
+   
     
       <HeroSection></HeroSection>
     </>
