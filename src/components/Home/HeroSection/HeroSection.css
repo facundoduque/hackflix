@@ -7,23 +7,36 @@
   background-position: center;
 }
 
-/* Ajustes precisos para centrar el input dentro de la TV */
-.input-overlay {
+/* Contenido dentro de la pantalla de la tele */
+.tv-content {
   position: absolute;
   top: 47%;
   left: 50%;
-  transform: translate(-80%, -80%);
-  width: 15%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  text-align: center;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.input-overlay input {
-  width: 100%;
-  padding: 10px 14px;
+/* Título dentro de la tele */
+.tv-content h1 {
+  font-size: 40px;
+  font-weight: bold;
+  color: black;
+  margin-left: -140px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Input dentro de la tele */
+.tv-content input {
+  padding: 10px 10px;
   font-size: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  width: 60%;
 }
