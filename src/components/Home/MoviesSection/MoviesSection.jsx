@@ -17,6 +17,12 @@ export const MoviesSection = () => {
   const fetchMovies = async () => {
     if (loading || !hasMore) return;
 
+    
+    if (movies.length >= 54) {
+      setHasMore(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const data = await fetcher(`/movie/popular?page=${page}`);
@@ -24,8 +30,7 @@ export const MoviesSection = () => {
 
       setMovies((prev) => [...prev, ...newMovies]);
 
-      // Si vienen menos de 18, asumimos que no hay más
-      if (newMovies.length < 18) {
+      if (newMovies.length < 18 || movies.length + newMovies.length >= 90) {
         setHasMore(false);
       }
 
@@ -38,7 +43,7 @@ export const MoviesSection = () => {
   };
 
   useEffect(() => {
-    fetchMovies(); // primera carga
+    fetchMovies(); 
   }, []);
 
   useEffect(() => {
@@ -80,16 +85,17 @@ export const MoviesSection = () => {
       </div>
 
       {loading && (
-        <div className="loading-text">
-          <p>Cargando más películas...</p>
+        <div className="loader-container">
+          <div className="custom-loader"></div>
         </div>
       )}
 
       {!hasMore && (
-        <div className="loading-text">
+        <div className="loader-container">
           <p>No hay más películas para mostrar.</p>
         </div>
       )}
     </div>
   );
 };
+
