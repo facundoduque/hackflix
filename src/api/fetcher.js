@@ -1,5 +1,6 @@
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Si usás Vite
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
 
 export async function fetcher(endpoint, options = {}) {
   const {
@@ -15,8 +16,8 @@ export async function fetcher(endpoint, options = {}) {
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
-
-  const response = await fetch(url.toString(), {
+  
+const response = await fetch(url.toString(), {
     method,
     headers: {
       'Content-Type': 'application/json',

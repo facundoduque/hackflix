@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetcher } from '../../../api/fetcher';
+import ModalSection from '../ModalSection/ModalSection';
 import './MoviesSection.css';
 
 export const MoviesSection = () => {
@@ -7,95 +8,138 @@ export const MoviesSection = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
-  const getImageUrl = (posterPath) => {
-    return posterPath 
-      ? `https://image.tmdb.org/t/p/w500${posterPath}`
-      : '/placeholder-movie.jpg';
-  };
+  const MAX_PAGES = 3;
 
-  const fetchMovies = async () => {
-    if (loading || !hasMore) return;
+  const getImageUrl = (posterPath) =>
+    posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : '/placeholder-movie.jpg';
 
-    
-    if (movies.length >= 54) {
-      setHasMore(false);
-      return;
-    }
+  const fetchMovies = useCallback(
+    async (pageToLoad) => {
+      if (loading || !hasMore) return;
 
-    setLoading(true);
-    try {
-      const data = await fetcher(`/movie/popular?page=${page}`);
-      const newMovies = data.results?.slice(0, 18) || [];
+      setLoading(true);
+      try {
+        const data = await fetcher('/movie/popular', {
+          params: {
+            page: pageToLoad,
+            language: 'es-ES',
+          },
+        });
 
-      setMovies((prev) => [...prev, ...newMovies]);
+        const newMovies = data.results.slice(0, 18);
 
-      if (newMovies.length < 18 || movies.length + newMovies.length >= 90) {
-        setHasMore(false);
+        setMovies((prevMovies) => {
+          const filteredNewMovies = newMovies.filter(
+            (movie) => !prevMovies.some((m) => m.id === movie.id)
+          );
+          return [...prevMovies, ...filteredNewMovies];
+        });
+
+        if (pageToLoad >= MAX_PAGES || newMovies.length < 18) {
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      } finally {
+        setLoading(false);
       }
-
-      setPage((prev) => prev + 1);
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
-    fetchMovies(); 
-  }, []);
+    fetchMovies(page);
+  }, [page, fetchMovies]);
 
   useEffect(() => {
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        fetchMovies();
+      if (scrollTop + clientHeight >= scrollHeight - 150 && !loading && hasMore) {
+        setPage((prevPage) => prevPage + 1);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [movies, loading, hasMore]);
+  }, [loading, hasMore]);
+
+  const handleClickMovie = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+  };
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
-    <div className="movie-grid-container">
-      <div className="movie-grid">
-        {movies.map((movie) => (
-          <div key={movie.id} className="movie-card">
-            <div className="movie-poster">
-              <img
-                src={getImageUrl(movie.poster_path)}
-                alt={movie.title}
-                loading="lazy"
-              />
-              <div className="movie-overlay">
-                <div className="movie-info">
-                  <h3 className="movie-title">{movie.title}</h3>
-                  <div className="movie-rating">
-                    <span className="star">⭐</span>
-                    <span>{movie.vote_average?.toFixed(1)}</span>
+    <>
+      <div className="movie-grid-container">
+        <div className="movie-grid">
+          {movies.map((movie) => (
+            <div
+              key={movie.id}
+              className="movie-card"
+              onClick={() => handleClickMovie(movie)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="movie-poster">
+                <img
+                  src={getImageUrl(movie.poster_path)}
+                  alt={movie.title}
+                  loading="lazy"
+                />
+                <div className="movie-overlay">
+                  <div className="movie-info">
+                    <h3 className="movie-title">{movie.title}</h3>
+                    <div className="movie-rating">
+                      <span className="star">⭐</span>
+                      <span>{movie.vote_average?.toFixed(1)}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          ))}
+        </div>
+
+        {loading && (
+          <div className="loader-container">
+            <div className="custom-loader"></div>
           </div>
-        ))}
+        )}
+
+        {hasMore && !loading && (
+          <div className="load-more-container" style={{ textAlign: 'center', margin: '20px 0' }}>
+            <button onClick={handleLoadMore} className="load-more-button">
+              Cargar más
+            </button>
+          </div>
+        )}
+
+        {!hasMore && (
+          <div className="loader-container">
+            <p>No hay más películas para mostrar.</p>
+          </div>
+        )}
       </div>
 
-      {loading && (
-        <div className="loader-container">
-          <div className="custom-loader"></div>
-        </div>
-      )}
-
-      {!hasMore && (
-        <div className="loader-container">
-          <p>No hay más películas para mostrar.</p>
-        </div>
-      )}
-    </div>
+      <ModalSection
+        isOpen={!!selectedMovie}
+        onClose={handleCloseModal}
+        title={selectedMovie?.title}
+        backdrop={selectedMovie?.backdrop_path}
+      >
+        <p>{selectedMovie?.overview || 'Sin descripción disponible.'}</p>
+      </ModalSection>
+    </>
   );
 };
-
