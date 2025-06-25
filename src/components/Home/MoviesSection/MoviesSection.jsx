@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import { fetcher } from '../../../api/fetcher';
-import ModalSection from '../ModalSection/ModalSection';
-import './MoviesSection.css';
+import { useState, useEffect, useCallback } from "react";
+import { fetcher } from "../../../api/fetcher";
+import ModalSection from "../ModalSection/ModalSection";
+import "./MoviesSection.css";
 
-export const MoviesSection = () => {
+function MoviesSection() {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,9 @@ export const MoviesSection = () => {
   const MAX_PAGES = 3;
 
   const getImageUrl = (posterPath) =>
-    posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : '/placeholder-movie.jpg';
+    posterPath
+      ? `https://image.tmdb.org/t/p/w500${posterPath}`
+      : "/placeholder-movie.jpg";
 
   const fetchMovies = useCallback(
     async (pageToLoad) => {
@@ -21,10 +23,10 @@ export const MoviesSection = () => {
 
       setLoading(true);
       try {
-        const data = await fetcher('/movie/popular', {
+        const data = await fetcher("/movie/popular", {
           params: {
             page: pageToLoad,
-            language: 'es-ES',
+            language: "es-ES",
           },
         });
 
@@ -41,7 +43,7 @@ export const MoviesSection = () => {
           setHasMore(false);
         }
       } catch (error) {
-        console.error('Error fetching movies:', error);
+        console.error("Error fetching movies:", error);
       } finally {
         setLoading(false);
       }
@@ -55,15 +57,20 @@ export const MoviesSection = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      const { scrollTop, scrollHeight, clientHeight } =
+        document.documentElement;
 
-      if (scrollTop + clientHeight >= scrollHeight - 150 && !loading && hasMore) {
+      if (
+        scrollTop + clientHeight >= scrollHeight - 150 &&
+        !loading &&
+        hasMore
+      ) {
         setPage((prevPage) => prevPage + 1);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore]);
 
   const handleClickMovie = (movie) => {
@@ -89,7 +96,7 @@ export const MoviesSection = () => {
               key={movie.id}
               className="movie-card"
               onClick={() => handleClickMovie(movie)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
             >
               <div className="movie-poster">
                 <img
@@ -118,7 +125,10 @@ export const MoviesSection = () => {
         )}
 
         {hasMore && !loading && (
-          <div className="load-more-container" style={{ textAlign: 'center', margin: '20px 0' }}>
+          <div
+            className="load-more-container"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
             <button onClick={handleLoadMore} className="load-more-button">
               Cargar más
             </button>
@@ -138,8 +148,10 @@ export const MoviesSection = () => {
         title={selectedMovie?.title}
         backdrop={selectedMovie?.backdrop_path}
       >
-        <p>{selectedMovie?.overview || 'Sin descripción disponible.'}</p>
+        <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
       </ModalSection>
     </>
   );
-};
+}
+
+export default MoviesSection;

@@ -1,7 +1,7 @@
 import React from "react";
 import "./HeroSection.css";
 
-export const HeroSection = () => {
+function HeroSection() {
   return (
     <section className="hero-section">
       <div className="particles">
@@ -14,12 +14,10 @@ export const HeroSection = () => {
 
       <div className="tv-content">
         <h1>¿Qué verás hoy?</h1>
-        <input
-          type="text"
-          placeholder="Hoy veré..."
-          autoComplete="off"
-        />
+        <input type="text" placeholder="Hoy veré..." autoComplete="off" />
       </div>
     </section>
   );
-};
+}
+
+export default HeroSection;

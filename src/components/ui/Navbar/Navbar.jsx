@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Navbar.css";
 
-export const Navbar = () => {
+function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -22,18 +22,18 @@ export const Navbar = () => {
   useEffect(() => {
     window.addEventListener("scroll", controlNavbar);
     return () => window.removeEventListener("scroll", controlNavbar);
-  }, [lastScrollY]);
+  });
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest('.main-navbar')) {
+      if (isOpen && !event.target.closest(".main-navbar")) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [isOpen]);
 
   return (
@@ -47,19 +47,29 @@ export const Navbar = () => {
         </div>
         <ul className={`nav-links ${isOpen ? "active" : ""}`}>
           <li>
-            <a href="#inicio" onClick={() => setIsOpen(false)}>Inicio</a>
+            <a href="#inicio" onClick={() => setIsOpen(false)}>
+              Inicio
+            </a>
           </li>
           <li>
-            <a href="#peliculas" onClick={() => setIsOpen(false)}>Películas</a>
+            <a href="#peliculas" onClick={() => setIsOpen(false)}>
+              Películas
+            </a>
           </li>
           <li>
-            <a href="#series" onClick={() => setIsOpen(false)}>Series</a>
+            <a href="#series" onClick={() => setIsOpen(false)}>
+              Series
+            </a>
           </li>
           <li>
-            <a href="#mi-lista" onClick={() => setIsOpen(false)}>Mi Lista</a>
+            <a href="#mi-lista" onClick={() => setIsOpen(false)}>
+              Mi Lista
+            </a>
           </li>
         </ul>
       </div>
     </nav>
   );
-};
+}
+
+export default Navbar;
