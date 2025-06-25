@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section logo-section">
-          <img src="/logo.png" alt="Logo" className="logo" />
+          <img src="/favicon-32x32.png" alt="Logo" className="logo" />
           <h2>HackFlix</h2>
           <p>
             &copy; {new Date().getFullYear()} HackFlix. Todos los derechos

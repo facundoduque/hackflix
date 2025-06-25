@@ -1,9 +1,10 @@
 .footer {
-  background-color: #111;
+  background-color: #000;
   color: #fff;
   padding: 40px 20px;
   position: relative;
   font-family: "Segoe UI", sans-serif;
+  border-top: solid 1px white;
 }
 
 .footer-container {
@@ -20,7 +21,7 @@
 }
 
 .logo-section .logo {
-  width: 80px;
+  width: 3rem;
   margin-bottom: 10px;
 }
 
@@ -111,5 +112,8 @@
     position: static;
     margin-top: 20px;
     display: block;
+  }
+  .logo-section .logo {
+  width: 2rem;
   }
 }
