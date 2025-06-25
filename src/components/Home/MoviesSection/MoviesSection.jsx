@@ -5,10 +5,12 @@ import "./MoviesSection.css";
 
 function MoviesSection() {
   const [movies, setMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedRating, setSelectedRating] = useState(0);
 
   const MAX_PAGES = 3;
 
@@ -52,6 +54,18 @@ function MoviesSection() {
   );
 
   useEffect(() => {
+    if (selectedRating === 0) {
+      setFilteredMovies(movies);
+    } else {
+      const filtered = movies.filter(movie => {
+        const movieRating = Math.floor(movie.vote_average / 2);
+        return movieRating === selectedRating;
+      });
+      setFilteredMovies(filtered);
+    }
+  }, [movies, selectedRating]);
+
+  useEffect(() => {
     fetchMovies(page);
   }, [page, fetchMovies]);
 
@@ -87,11 +101,46 @@ function MoviesSection() {
     }
   };
 
+  const handleStarClick = (rating) => {
+    setSelectedRating(rating);
+  };
+
   return (
     <>
+      {/* Filtro de Rating */}
+      <div className="rating-filter-section">
+        <div className="rating-filter">
+          <label>⭐ Filtrar por rating ⭐</label>
+          <div className="stars">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                className={`star ${star <= selectedRating ? 'active' : ''}`}
+                onClick={() => handleStarClick(star)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+          {selectedRating > 0 && (
+            <button 
+              className="clear-rating" 
+              onClick={() => setSelectedRating(0)}
+            >
+              Mostrar todas
+            </button>
+          )}
+          <div className="results-count">
+            {selectedRating > 0 && (
+              <span>Mostrando {filteredMovies.length} películas de {selectedRating} estrellas</span>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="movie-grid-container">
         <div className="movie-grid">
-          {movies.map((movie) => (
+          {filteredMovies.map((movie) => (
             <div
               key={movie.id}
               className="movie-card"

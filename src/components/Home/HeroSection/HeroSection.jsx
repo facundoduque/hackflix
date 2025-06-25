@@ -16,7 +16,8 @@ function HeroSection() {
         <h1>¿Qué verás hoy?</h1>
         <input type="text" placeholder="Hoy veré..." autoComplete="off" />
       </div>
-    </section>
+       </section>
+       
   );
 }
 
