@@ -19,13 +19,11 @@ export default function MovieDetails() {
           `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=es-ES`
         );
         const movieData = await resMovie.json();
-        console.log("movieData", movieData);
 
         const resCredits = await fetch(
           `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}&language=es-ES`
         );
         const creditsData = await resCredits.json();
-        console.log("creditsData", creditsData);
 
         setMovie(movieData);
         setCredits(creditsData);
@@ -45,40 +43,30 @@ export default function MovieDetails() {
   const director = credits?.crew.find((person) => person.job === "Director");
   const actors = credits?.cast?.slice(0, 5);
 
-  const imageUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "https://via.placeholder.com/500x750?text=No+Image";
-
   return (
-    <div className="movie-details-container">
-      <div className="movie-poster">
-        <img src={imageUrl} alt={movie.title} />
-      </div>
+    <div
+      className="details-backdrop"
+      style={{
+        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0,0,0,0.1)), url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+      }}
+    >
+      <h1 className="details-title">{movie.title}</h1>
 
-      <div className="movie-info">
-        <h1>{movie.title}</h1>
-        <p>
-          <strong>Director:</strong> {director?.name || "Desconocido"}
-        </p>
-        <p>
-          <strong>Rating:</strong> {movie.vote_average?.toFixed(1)} / 10 ⭐
-        </p>
-        <p>
-          <strong>Actores:</strong>{" "}
-          {actors ? actors.map((actor) => actor.name).join(", ") : "No disponible"}
-        </p>
-        <p>
-          <strong>Descripción:</strong> {movie.overview}
-        </p>
-        <p>
-          <strong>Fecha de estreno:</strong> {movie.release_date}
-        </p>
-
-        <div className="movie-buttons">
-          <button className="movie-button" onClick={() => navigate(-1)}>
-            Volver
-          </button>
+      <div className="details-content">
+        <div className="details-grid">
+          <div>
+            <p><strong>🎬 Director:</strong> {director?.name || "Desconocido"}</p>
+            <p><strong>⭐ Rating:</strong> {movie.vote_average?.toFixed(1)} / 10</p>
+            <p><strong>🎭 Actores:</strong> {actors?.map(a => a.name).join(", ")}</p>
+          </div>
+          <div>
+            <p><strong>📅 Estreno:</strong> {movie.release_date}</p>
+            <p><strong>📝 Descripción:</strong></p>
+            <p className="details-overview">{movie.overview}</p>
+          </div>
         </div>
+
+        <button className="movie-button" onClick={() => navigate(-1)}>Volver</button>
       </div>
     </div>
   );
