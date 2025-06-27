@@ -192,13 +192,15 @@ function MoviesSection() {
       </div>
 
       <ModalSection
-        isOpen={!!selectedMovie}
-        onClose={handleCloseModal}
-        title={selectedMovie?.title}
-        backdrop={selectedMovie?.backdrop_path}
-      >
-        <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
-      </ModalSection>
+  isOpen={!!selectedMovie}
+  onClose={handleCloseModal}
+  title={selectedMovie?.title}
+  backdrop={selectedMovie?.backdrop_path}
+  movieId={selectedMovie?.id}  // <--- Esta línea es fundamental
+>
+  <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
+</ModalSection>
+
     </>
   );
 }
