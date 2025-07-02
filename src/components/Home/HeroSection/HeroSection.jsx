@@ -1,5 +1,6 @@
 import React from "react";
 import "./HeroSection.css";
+import SearchInput from "../../ui/SearchInput/SearchInput";
 
 function HeroSection() {
   return (
@@ -14,10 +15,10 @@ function HeroSection() {
 
       <div className="tv-content">
         <h1>¿Qué verás hoy?</h1>
-        <input type="text" placeholder="Hoy veré..." autoComplete="off" />
+
+        <SearchInput />
       </div>
-       </section>
-       
+    </section>
   );
 }
 

@@ -1,6 +1,6 @@
 import "./App.css";
-
-import { Routes, Route } from "react-router-dom";
+import SearchInput from "./components/ui/SearchInput/SearchInput.jsx";
+import { Routes, Route } from "react-router";
 import Home from "./pages/Home";
 import MovieDetails from "./components/Home/MovieDetails/MovieDetails";
 
