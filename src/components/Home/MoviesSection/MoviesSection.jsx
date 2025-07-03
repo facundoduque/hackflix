@@ -132,7 +132,7 @@ function MoviesSection() {
           )}
           <div className="results-count">
             {selectedRating > 0 && (
-              <span>Mostrando {filteredMovies.length} películas de {selectedRating} estrellas</span>
+              <span>Mostrando {filteredMovies.length} películas </span>
             )}
           </div>
         </div>
