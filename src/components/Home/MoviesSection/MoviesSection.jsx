@@ -57,7 +57,7 @@ function MoviesSection() {
     if (selectedRating === 0) {
       setFilteredMovies(movies);
     } else {
-      const filtered = movies.filter(movie => {
+      const filtered = movies.filter((movie) => {
         const movieRating = Math.floor(movie.vote_average / 2);
         return movieRating === selectedRating;
       });
@@ -115,7 +115,7 @@ function MoviesSection() {
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
-                className={`star ${star <= selectedRating ? 'active' : ''}`}
+                className={`star ${star <= selectedRating ? "active" : ""}`}
                 onClick={() => handleStarClick(star)}
               >
                 ★
@@ -123,8 +123,8 @@ function MoviesSection() {
             ))}
           </div>
           {selectedRating > 0 && (
-            <button 
-              className="clear-rating" 
+            <button
+              className="clear-rating"
               onClick={() => setSelectedRating(0)}
             >
               Mostrar todas
@@ -192,15 +192,14 @@ function MoviesSection() {
       </div>
 
       <ModalSection
-  isOpen={!!selectedMovie}
-  onClose={handleCloseModal}
-  title={selectedMovie?.title}
-  backdrop={selectedMovie?.backdrop_path}
-  movieId={selectedMovie?.id}  // <--- Esta línea es fundamental
->
-  <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
-</ModalSection>
-
+        isOpen={!!selectedMovie}
+        onClose={handleCloseModal}
+        title={selectedMovie?.title}
+        backdrop={selectedMovie?.backdrop_path}
+        movieId={selectedMovie?.id} // <--- Esta línea es fundamental
+      >
+        <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
+      </ModalSection>
     </>
   );
 }
