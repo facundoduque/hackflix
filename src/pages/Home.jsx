@@ -9,7 +9,7 @@ function Home() {
     <div>
       <Navbar />
       <HeroSection />
-      <SearchInput />
+
       <MoviesSection />
       <Footer />
     </div>
