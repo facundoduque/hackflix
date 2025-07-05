@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import ModalSection from "./Home/ModalSection/ModalSection";
 import "./Home/MovieDetails/MovieDetails.css";
+import "./ui/SearchResults.css";
 
 const SearchResults = () => {
   const { query } = useParams();
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const API_KEY = "907a9fb809fb11078579d97f9714bd2b";
@@ -34,7 +36,16 @@ const SearchResults = () => {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
+      {/* Botón Volver arriba */}
+      <button
+        className="movie-button"
+        onClick={() => navigate(-1)}
+        style={{ marginBottom: "1rem" }}
+      >
+        Volver
+      </button>
+
+      <h2 className="results-title">
         Resultados para: <strong>{decodeURIComponent(query)}</strong>
       </h2>
 
