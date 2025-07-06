@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,7 +27,6 @@ function Navbar() {
     return () => window.removeEventListener("scroll", controlNavbar);
   });
 
-  // Cerrar menú al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && !event.target.closest(".main-navbar")) {
@@ -36,10 +38,30 @@ function Navbar() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isOpen]);
 
+  const handleNavigation = (path) => {
+    setIsOpen(false);
+    if (path === "/") {
+      navigate("/");
+    } else if (path === "/search") {
+      navigate("/search");
+    }
+  };
+
+  const handleLogoClick = () => {
+    navigate("/");
+    setIsOpen(false);
+  };
+
   return (
     <nav className={`main-navbar ${showNavbar ? "show" : "hide"}`}>
       <div className="navbar-container">
-        <div className="hackflix">HackFlix</div>
+        <div
+          className="hackflix"
+          onClick={handleLogoClick}
+          style={{ cursor: "pointer" }}
+        >
+          HackFlix
+        </div>
         <div className="hamburger" onClick={toggleMenu}>
           <span className={`bar ${isOpen ? "open" : ""}`}></span>
           <span className={`bar ${isOpen ? "open" : ""}`}></span>
@@ -47,23 +69,21 @@ function Navbar() {
         </div>
         <ul className={`nav-links ${isOpen ? "active" : ""}`}>
           <li>
-            <a href="#inicio" onClick={() => setIsOpen(false)}>
+            <a
+              onClick={() => handleNavigation("/")}
+              className={location.pathname === "/" ? "active-link" : ""}
+              style={{ cursor: "pointer" }}
+            >
               Inicio
             </a>
           </li>
           <li>
-            <a href="#peliculas" onClick={() => setIsOpen(false)}>
-              Películas
-            </a>
-          </li>
-          <li>
-            <a href="#series" onClick={() => setIsOpen(false)}>
-              Series
-            </a>
-          </li>
-          <li>
-            <a href="#mi-lista" onClick={() => setIsOpen(false)}>
-              Mi Lista
+            <a
+              onClick={() => handleNavigation("/search")}
+              className={location.pathname.startsWith("/search") ? "active-link" : ""}
+              style={{ cursor: "pointer" }}
+            >
+              Buscar
             </a>
           </li>
         </ul>

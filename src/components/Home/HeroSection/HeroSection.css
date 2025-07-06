@@ -5,7 +5,6 @@
   background-image: url("/imagen_horizontal_hero.jpg");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   overflow: hidden;
 }
 
@@ -28,11 +27,11 @@
 }
 
 .tele-container {
-  position: absolute; /* Posicionamos la tele de manera absoluta dentro de la hero-section */
-  top: 50%; /* Centrado en el eje vertical */
-  left: 50%; /* Centrado en el eje horizontal */
-  transform: translate(-50%, -50%); /* Centrado exacto */
-  width: 60%; /* Ajusta el tamaño de la tele */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -41,11 +40,10 @@
   pointer-events: none;
 }
 
-/* Centrado del contenido (h1 e input) */
 .tv-content {
-  position: absolute; /* Necesario para ubicarlo encima de la imagen */
-  top: 48%; /* Ajusta verticalmente dentro de la tele */
-  left: 42%; /* Mueve un poco más hacia la izquierda */
+  position: absolute;
+  top: 48%;
+  left: 42%;
   transform: translate(-50%, -50%);
   text-align: center;
   display: flex;

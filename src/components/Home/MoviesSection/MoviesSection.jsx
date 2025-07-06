@@ -1,91 +1,56 @@
-import { useState, useEffect, useCallback } from "react";
-import { fetcher } from "../../../api/fetcher";
+import { useState, useEffect, useMemo } from "react";
+import { usePopularMovies } from "../../../hooks/useMovies";
 import ModalSection from "../ModalSection/ModalSection";
 import "./MoviesSection.css";
 
 function MoviesSection() {
-  const [movies, setMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [selectedRating, setSelectedRating] = useState(0);
 
-  const MAX_PAGES = 3;
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+  } = usePopularMovies();
 
-  const getImageUrl = (posterPath) =>
-    posterPath
-      ? `https://image.tmdb.org/t/p/w500${posterPath}`
-      : "/placeholder-movie.jpg";
+  const movies = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.results);
+  }, [data]);
 
-  const fetchMovies = useCallback(
-    async (pageToLoad) => {
-      if (loading || !hasMore) return;
-
-      setLoading(true);
-      try {
-        const data = await fetcher("/movie/popular", {
-          params: {
-            page: pageToLoad,
-            language: "es-ES",
-          },
-        });
-
-        const newMovies = data.results.slice(0, 18);
-
-        setMovies((prevMovies) => {
-          const filteredNewMovies = newMovies.filter(
-            (movie) => !prevMovies.some((m) => m.id === movie.id)
-          );
-          return [...prevMovies, ...filteredNewMovies];
-        });
-
-        if (pageToLoad >= MAX_PAGES || newMovies.length < 18) {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [loading, hasMore]
-  );
-
-  useEffect(() => {
-    if (selectedRating === 0) {
-      setFilteredMovies(movies);
-    } else {
-      const filtered = movies.filter((movie) => {
-        const movieRating = Math.floor(movie.vote_average / 2);
-        return movieRating === selectedRating;
-      });
-      setFilteredMovies(filtered);
-    }
+  const filteredMovies = useMemo(() => {
+    if (selectedRating === 0) return movies;
+    return movies.filter((movie) => {
+      const movieRating = Math.floor(movie.vote_average / 2);
+      return movieRating === selectedRating;
+    });
   }, [movies, selectedRating]);
 
   useEffect(() => {
-    fetchMovies(page);
-  }, [page, fetchMovies]);
-
-  useEffect(() => {
     const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } =
-        document.documentElement;
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
       if (
         scrollTop + clientHeight >= scrollHeight - 150 &&
-        !loading &&
-        hasMore
+        hasNextPage &&
+        !isFetchingNextPage
       ) {
-        setPage((prevPage) => prevPage + 1);
+        fetchNextPage();
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const getImageUrl = (posterPath) =>
+    posterPath
+      ? `https://image.tmdb.org/t/p/w500${posterPath}`
+      : "/placeholder-movie.jpg";
 
   const handleClickMovie = (movie) => {
     setSelectedMovie(movie);
@@ -96,8 +61,8 @@ function MoviesSection() {
   };
 
   const handleLoadMore = () => {
-    if (!loading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   };
 
@@ -105,9 +70,21 @@ function MoviesSection() {
     setSelectedRating(rating);
   };
 
+  // Manejo de errores
+  if (isError) {
+    return (
+      <div className="error-container">
+        <h3>Error al cargar las películas</h3>
+        <p>{error?.message || 'Ha ocurrido un error inesperado'}</p>
+        <button onClick={() => window.location.reload()}>
+          Intentar de nuevo
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
-      {/* Filtro de Rating */}
       <div className="rating-filter-section">
         <div className="rating-filter">
           <label>⭐ Filtrar por rating ⭐</label>
@@ -139,52 +116,49 @@ function MoviesSection() {
       </div>
 
       <div className="movie-grid-container">
-        <div className="movie-grid">
-          {filteredMovies.map((movie) => (
-            <div
-              key={movie.id}
-              className="movie-card"
-              onClick={() => handleClickMovie(movie)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="movie-poster">
-                <img
-                  src={getImageUrl(movie.poster_path)}
-                  alt={movie.title}
-                  loading="lazy"
-                />
-                <div className="movie-overlay">
-                  <div className="movie-info">
-                    <h3 className="movie-title">{movie.title}</h3>
-                    <div className="movie-rating">
-                      <span className="star">⭐</span>
-                      <span>{movie.vote_average?.toFixed(1)}</span>
+        {isLoading && (
+          <div className="loader-container">
+            <div className="custom-loader"></div>
+            <p>Cargando películas...</p>
+          </div>
+        )}
+
+        {!isLoading && (
+          <div className="movie-grid">
+            {filteredMovies.map((movie) => (
+              <div
+                key={movie.id}
+                className="movie-card"
+                onClick={() => handleClickMovie(movie)}
+                style={{ cursor: "pointer" }}
+              >
+                <div className="movie-poster">
+                  <img
+                    src={getImageUrl(movie.poster_path)}
+                    alt={movie.title}
+                    loading="lazy"
+                  />
+                  <div className="movie-overlay">
+                    <div className="movie-info">
+                      <h3 className="movie-title">{movie.title}</h3>
+                      <div className="movie-rating">
+                        <span className="star">⭐</span>
+                        <span>{movie.vote_average?.toFixed(1)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {loading && (
+            ))}
+          </div>
+        )}
+        {isFetchingNextPage && (
           <div className="loader-container">
             <div className="custom-loader"></div>
+            <p>Cargando más películas...</p>
           </div>
         )}
-
-        {hasMore && !loading && (
-          <div
-            className="load-more-container"
-            style={{ textAlign: "center", margin: "20px 0" }}
-          >
-            <button onClick={handleLoadMore} className="load-more-button">
-              Cargar más
-            </button>
-          </div>
-        )}
-
-        {!hasMore && (
+        {!hasNextPage && !isLoading && movies.length > 0 && (
           <div className="loader-container">
             <p>No hay más películas para mostrar.</p>
           </div>
@@ -196,7 +170,7 @@ function MoviesSection() {
         onClose={handleCloseModal}
         title={selectedMovie?.title}
         backdrop={selectedMovie?.backdrop_path}
-        movieId={selectedMovie?.id} // <--- Esta línea es fundamental
+        movieId={selectedMovie?.id}
       >
         <p>{selectedMovie?.overview || "Sin descripción disponible."}</p>
       </ModalSection>
