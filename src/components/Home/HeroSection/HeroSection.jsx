@@ -13,10 +13,11 @@ function HeroSection() {
         <div className="particle"></div>
       </div>
 
-      <div className="tv-content">
-        <h1>¿Qué verás hoy?</h1>
-
-        <SearchInput />
+      <div className="tele-container">
+        <div className="tv-content">
+          <h1>¿Qué verás hoy?</h1>
+          <SearchInput />
+        </div>
       </div>
     </section>
   );

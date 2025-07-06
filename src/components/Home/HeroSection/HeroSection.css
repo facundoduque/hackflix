@@ -10,7 +10,7 @@
 }
 
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -27,45 +27,42 @@
   z-index: 1;
 }
 
-.hero-section::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    transparent 100%
-  );
+.tele-container {
+  position: absolute; /* Posicionamos la tele de manera absoluta dentro de la hero-section */
+  top: 50%; /* Centrado en el eje vertical */
+  left: 50%; /* Centrado en el eje horizontal */
+  transform: translate(-50%, -50%); /* Centrado exacto */
+  width: 60%; /* Ajusta el tamaño de la tele */
   z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  pointer-events: none;
 }
 
+/* Centrado del contenido (h1 e input) */
 .tv-content {
-  position: absolute;
-  top: 47%;
-  left: 50%;
+  position: absolute; /* Necesario para ubicarlo encima de la imagen */
+  top: 48%; /* Ajusta verticalmente dentro de la tele */
+  left: 42%; /* Mueve un poco más hacia la izquierda */
   transform: translate(-50%, -50%);
-  width: 30%;
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 12px;
   z-index: 3;
-  animation: fadeInUp 1s ease-out;
+  align-items: center;
+  pointer-events: auto;
 }
 
 .tv-content h1 {
   font-size: 40px;
   font-weight: bold;
   color: black;
-  margin-left: -140px;
   padding: 4px 8px;
   border-radius: 6px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  animation: glow 2s ease-in-out infinite alternate;
 }
 
 .tv-content input {
@@ -74,9 +71,7 @@
   border: none;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 4px 15px rgba(0, 0, 0, 0.3),
-    inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
   width: 60%;
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
@@ -84,9 +79,7 @@
 
 .tv-content input:focus {
   outline: none;
-  box-shadow:
-    0 6px 20px rgba(229, 9, 20, 0.4),
-    0 0 0 3px rgba(229, 9, 20, 0.3),
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4), 0 0 0 3px rgba(229, 9, 20, 0.3),
     inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
@@ -110,15 +103,12 @@
 
 @keyframes glow {
   from {
-    text-shadow:
-      2px 2px 4px rgba(0, 0, 0, 0.3),
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3),
       0 0 10px rgba(255, 255, 255, 0.2);
   }
   to {
-    text-shadow:
-      2px 2px 4px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 255, 255, 0.4),
-      0 0 30px rgba(255, 255, 255, 0.2);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -168,7 +158,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(100vh) scale(0);
     opacity: 0;
   }
@@ -184,9 +175,9 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .tv-content {
-    width: 50%;
-    gap: 16px;
+  .tele-container {
+    width: 80%;
+    top: 30%;
   }
 
   .tv-content h1 {
@@ -198,15 +189,12 @@
     width: 80%;
     font-size: 14px;
   }
-
-  .hero-section {
-    background-attachment: scroll;
-  }
 }
 
 @media (max-width: 480px) {
-  .tv-content {
-    width: 70%;
+  .tele-container {
+    width: 90%;
+    top: 35%;
   }
 
   .tv-content h1 {
