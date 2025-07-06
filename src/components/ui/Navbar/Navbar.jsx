@@ -6,6 +6,7 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [watchlistCount, setWatchlistCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,10 +23,30 @@ function Navbar() {
     setLastScrollY(window.scrollY);
   };
 
+  const updateWatchlistCount = () => {
+    const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+    setWatchlistCount(watchlist.length);
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", controlNavbar);
-    return () => window.removeEventListener("scroll", controlNavbar);
-  });
+
+    updateWatchlistCount();
+
+    const handleStorageChange = () => {
+      updateWatchlistCount();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    window.addEventListener('watchlistUpdated', updateWatchlistCount);
+
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('watchlistUpdated', updateWatchlistCount);
+    };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,6 +65,8 @@ function Navbar() {
       navigate("/");
     } else if (path === "/search") {
       navigate("/search");
+    } else if (path === "/mi-lista") {
+      navigate("/mi-lista");
     }
   };
 
@@ -84,6 +107,18 @@ function Navbar() {
               style={{ cursor: "pointer" }}
             >
               Buscar
+            </a>
+          </li>
+          <li>
+            <a
+              onClick={() => handleNavigation("/mi-lista")}
+              className={location.pathname === "/mi-lista" ? "active-link" : ""}
+              style={{ cursor: "pointer" }}
+            >
+              Mi Lista
+              {watchlistCount > 0 && (
+                <span className="watchlist-badge">{watchlistCount}</span>
+              )}
             </a>
           </li>
         </ul>

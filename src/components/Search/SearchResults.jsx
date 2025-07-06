@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSearchMovies } from "../hooks/useMovies";
-import ModalSection from "./Home/ModalSection/ModalSection";
-import "./Home/MovieDetails/MovieDetails.css";
-import "./ui/SearchResults.css";
+import { useSearchMovies } from "../../hooks/useMovies";
+import ModalSection from "../Home/ModalSection/ModalSection";
+import "../Home/MovieDetails/MovieDetails.css";
+import "./SearchResults.css";
 
 const SearchResults = () => {
   const { query: urlQuery } = useParams();
@@ -119,8 +119,6 @@ const SearchResults = () => {
           </div>
         </div>
       </div>
-
-      {/* Error state */}
       {isError && (
         <div className="error-container">
           <h3>Error en la búsqueda</h3>

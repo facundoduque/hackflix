@@ -4,7 +4,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Home from "./pages/Home";
 import MovieDetails from "./components/Home/MovieDetails/MovieDetails";
-import SearchResults from "./components/SearchResults";
+import SearchResults from "./components/Search/SearchResults";
+import WatchlistPage from "./components/ui/WatchList/Watchlist";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,8 +29,8 @@ function App() {
         <Route path="/pelicula/:id" element={<MovieDetails />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/search/:query" element={<SearchResults />} />
+        <Route path="/mi-lista" element={<WatchlistPage />} />
       </Routes>
-      {/* DevTools solo en desarrollo */}
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
